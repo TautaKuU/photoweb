@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photobooth Web dengan Template Kustom</title>
+    <title>Photobooth Web Pixel Art Template</title>
     <style>
         /* CSS untuk Styling */
         
         body {
-            font-family: 'Poppins', sans-serif;
-            /* Contoh font lebih modern */
+            font-family: 'Press Start 2P', cursive;
+            /* Font pixel art, perlu diimport */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -20,21 +20,26 @@
             color: white;
             margin: 0;
             padding: 20px;
+            text-align: center;
         }
+        /* Import Google Font (Press Start 2P untuk pixel art vibe) */
         
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         h1,
         h2 {
+            font-family: 'Press Start 2P', cursive;
             color: #00ff88;
-            /* Warna hijau neon */
             text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+            margin-bottom: 20px;
         }
-        /* --- Kontainer Kamera (Lanskap) --- */
+        /* --- Kontainer Kamera (Potret) --- */
         
         #camera-container {
-            width: 400px;
-            height: 300px;
+            width: 300px;
+            /* Lebar Potret */
+            height: 400px;
+            /* Tinggi Potret */
             border: 5px solid #00ff88;
-            /* Border hijau neon */
             background-color: black;
             position: relative;
             overflow: hidden;
@@ -66,11 +71,13 @@
         }
         
         #timer {
+            font-family: 'Press Start 2P', cursive;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 8em;
+            font-size: 5em;
+            /* Ukuran lebih kecil untuk pixel font */
             color: white;
             text-shadow: 0 0 10px black;
             display: none;
@@ -78,13 +85,13 @@
         }
         
         button {
+            font-family: 'Press Start 2P', cursive;
             padding: 10px 25px;
-            font-size: 1.2em;
+            font-size: 1em;
+            /* Ukuran lebih kecil untuk pixel font */
             cursor: pointer;
             background-color: #00ff88;
-            /* Warna hijau neon */
             color: #1a1a1a;
-            /* Teks gelap */
             border: none;
             border-radius: 8px;
             transition: background-color 0.3s, transform 0.2s;
@@ -105,7 +112,7 @@
             box-shadow: none;
             transform: none;
         }
-        /* --- Template Selector (Menyesuaikan dengan tampilan gambar) --- */
+        /* --- Template Selector (Potret) --- */
         
         #template-selector {
             margin: 20px 0;
@@ -117,13 +124,12 @@
         }
         
         .template-option {
-            width: 250px;
+            width: 80px;
             /* Lebar thumbnail preview */
-            height: 70px;
-            /* Tinggi thumbnail preview */
+            height: 240px;
+            /* Tinggi thumbnail preview (proporsional dengan 500x1500) */
             border: 4px solid #444;
             display: flex;
-            /* Flex untuk konten di dalam opsi */
             align-items: center;
             justify-content: center;
             cursor: pointer;
@@ -132,7 +138,6 @@
             border-radius: 8px;
             transition: border-color 0.3s, box-shadow 0.3s;
             overflow: hidden;
-            /* Penting untuk gambar preview */
         }
         
         .template-option.selected {
@@ -144,21 +149,24 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Pastikan gambar mengisi preview */
             opacity: 0.7;
-            /* Sedikit transparan untuk visual */
         }
         
         .template-option-label {
+            font-family: 'Press Start 2P', cursive;
             position: absolute;
+            bottom: 5px;
+            /* Sesuaikan posisi label */
             background-color: rgba(0, 0, 0, 0.7);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9em;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.7em;
             font-weight: bold;
             color: white;
+            white-space: nowrap;
+            /* Cegah teks pecah */
         }
-        /* --- Hasil Foto Lanskap --- */
+        /* --- Hasil Foto Potret --- */
         
         #result-container {
             margin-top: 30px;
@@ -168,13 +176,13 @@
         }
         
         #final-strip {
-            width: 1600px;
-            height: 300px;
+            /* Sesuaikan dengan ukuran template Anda */
+            width: 500px;
+            height: 1500px;
             border: 10px solid #00ff88;
             box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
             border-radius: 10px;
             background-color: #1f1f1f;
-            /* Warna fallback jika template gagal load */
         }
         
         .hidden {
@@ -185,28 +193,20 @@
 
 <body>
 
-    <h1>Photobooth Web Estetik</h1>
+    <h1>Pixel Photobooth</h1>
 
     <div id="template-selector">
-        <h2>Pilih Desain Photostrip Anda</h2>
-        <div id="template-1" class="template-option selected" data-template-img="template_cosmic.png">
-            <img src="template_cosmic_preview.png" alt="Cosmic Vibes Preview" class="preview">
-            <span class="template-option-label">Cosmic Vibes</span>
-        </div>
-        <div id="template-2" class="template-option" data-template-img="template_floral.png">
-            <img src="template_floral_preview.png" alt="Floral Dream Preview" class="preview">
-            <span class="template-option-label">Floral Dream</span>
-        </div>
-        <div id="template-3" class="template-option" data-template-img="template_retro.png">
-            <img src="template_retro_preview.png" alt="Retro Party Preview" class="preview">
-            <span class="template-option-label">Retro Party</span>
+        <h2>Pilih Pixel Theme</h2>
+        <div id="template-1" class="template-option selected" data-template-img="template_pixel_cosmic.png">
+            <img src="template_pixel_cosmic_preview.png" alt="Pixel Cosmic Preview" class="preview">
+            <span class="template-option-label">Pixel Cosmic</span>
         </div>
     </div>
 
     <div id="camera-container">
         <video id="video" autoplay></video>
         <div id="timer"></div>
-        <p id="start-message" style="color: white; text-align: center; padding-top: 140px;">Klik **Aktifkan Kamera**.</p>
+        <p id="start-message" style="color: white; text-align: center; padding-top: 180px;">Klik **Aktifkan Kamera**.</p>
     </div>
 
     <div id="flash-overlay"></div>
@@ -215,9 +215,9 @@
     <button id="startButton" disabled>Mulai Sesi Photobooth</button>
 
     <div id="result-container">
-        <h2>Hasil Foto Strip Horizontal Anda</h2>
-        <canvas id="final-strip" width="1600" height="300"></canvas>
-        <button id="downloadButton">Unduh Foto Strip</button>
+        <h2>Hasil Pixel Strip Anda</h2>
+        <canvas id="final-strip" width="500" height="1500"></canvas>
+        <button id="downloadButton">Unduh Pixel Strip</button>
     </div>
 
     <canvas id="snapshot-canvas" class="hidden"></canvas>
@@ -239,8 +239,41 @@
         const photos = [];
 
         const PHOTO_COUNT = 4;
-        let selectedTemplateImgSrc = 'template_cosmic.png'; // Default template
-        let templateImage = new Image(); // Objek gambar untuk template
+        let selectedTemplateImgSrc = 'template_pixel_cosmic.png';
+        let templateImage = new Image();
+
+        // --- Variabel untuk Koordinat Foto pada Template Anda (Penting!) ---
+        // Ini adalah koordinat dan ukuran lubang transparan di template pixel art Anda
+        const photoLayouts = [{
+                x: 75,
+                y: 350,
+                width: 350,
+                height: 250
+            }, // Foto 1
+            {
+                x: 75,
+                y: 620,
+                width: 350,
+                height: 250
+            }, // Foto 2
+            {
+                x: 75,
+                y: 890,
+                width: 350,
+                height: 250
+            }, // Foto 3
+            {
+                x: 75,
+                y: 1160,
+                width: 350,
+                height: 250
+            } // Foto 4
+        ];
+        // Anda mungkin perlu menyesuaikan nilai-nilai X, Y, WIDTH, HEIGHT ini
+        // agar sesuai persis dengan template_pixel_cosmic.png Anda.
+        // Caranya: buka template Anda di software desain (Photoshop/GIMP/Canva)
+        // dan ukur posisi serta dimensi setiap lubang foto.
+        // Sesuaikan juga ukuran canvas #final-strip jika template Anda tidak 500x1500.
 
         // 1. Logika Pemilihan Template
         templateOptions.forEach(option => {
@@ -248,27 +281,25 @@
                 templateOptions.forEach(opt => opt.classList.remove('selected'));
                 option.classList.add('selected');
                 selectedTemplateImgSrc = option.getAttribute('data-template-img');
-                // Pra-muat gambar template yang dipilih
                 templateImage.src = selectedTemplateImgSrc;
                 templateImage.onload = () => console.log('Template image loaded:', selectedTemplateImgSrc);
                 templateImage.onerror = () => console.error('Failed to load template image:', selectedTemplateImgSrc);
             });
         });
 
-        // Muat template default saat pertama kali dimuat
         templateImage.src = selectedTemplateImgSrc;
 
-        // 2. Fungsi untuk mengaktifkan kamera
+        // 2. Fungsi untuk mengaktifkan kamera (Potret)
         function startCamera() {
             navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: 'user',
                         width: {
-                            ideal: 600
-                        },
-                        height: {
                             ideal: 450
-                        }
+                        }, // Preferensi lebar untuk potret
+                        height: {
+                            ideal: 600
+                        } // Preferensi tinggi untuk potret
                     }
                 })
                 .then(stream => {
@@ -337,8 +368,9 @@
 
         // 4. Fungsi untuk mengambil satu frame dan menyimpannya
         function captureSnapshot(index) {
-            const videoWidth = video.videoWidth || 600;
-            const videoHeight = video.videoHeight || 450;
+            // Menggunakan dimensi Video aktual untuk mengambil snapshot Potret
+            const videoWidth = video.videoWidth || 450;
+            const videoHeight = video.videoHeight || 600;
 
             snapshotCanvas.width = videoWidth;
             snapshotCanvas.height = videoHeight;
@@ -349,30 +381,42 @@
             photos[index] = snapshotCanvas.toDataURL('image/png');
         }
 
-        // 5. Fungsi untuk menggambar hasil akhir strip foto (Horizontal)
+        // 5. Fungsi untuk menggambar hasil akhir strip foto (Potret & menyesuaikan template)
         function drawFinalStrip() {
             const stripWidth = finalStripCanvas.width;
             const stripHeight = finalStripCanvas.height;
             const ctx = finalStripCanvas.getContext('2d');
 
-            // Bersihkan canvas
             ctx.clearRect(0, 0, stripWidth, stripHeight);
 
-            // 1. Gambar semua foto terlebih dahulu
-            const panelWidth = stripWidth / PHOTO_COUNT;
-            const padding = 10;
-            const photoHeight = stripHeight - (padding * 2); // Tinggi foto setelah padding
+            // Atur background jika template belum dimuat
+            ctx.fillStyle = '#1f1f1f';
+            ctx.fillRect(0, 0, stripWidth, stripHeight);
 
             let loadedPhotos = 0;
             photos.forEach((dataURL, index) => {
                 const img = new Image();
                 img.onload = () => {
-                    const imageRatio = img.width / img.height;
-                    const drawWidth = photoHeight * imageRatio; // Lebar foto disesuaikan
-                    const drawHeight = photoHeight;
+                    // Dapatkan posisi dan ukuran lubang foto dari array photoLayouts
+                    const layout = photoLayouts[index];
 
-                    const offsetX = index * panelWidth + (panelWidth - drawWidth) / 2; // Posisi di tengah panel
-                    const offsetY = padding;
+                    const imageRatio = img.width / img.height;
+                    const layoutRatio = layout.width / layout.height;
+
+                    let drawWidth, drawHeight, offsetX, offsetY;
+
+                    // Hitung agar foto pas di dalam lubang (cover effect)
+                    if (imageRatio > layoutRatio) { // Gambar lebih lebar dari lubang
+                        drawHeight = layout.height;
+                        drawWidth = layout.height * imageRatio;
+                        offsetX = layout.x + (layout.width - drawWidth) / 2;
+                        offsetY = layout.y;
+                    } else { // Gambar lebih tinggi dari lubang
+                        drawWidth = layout.width;
+                        drawHeight = layout.width / imageRatio;
+                        offsetX = layout.x;
+                        offsetY = layout.y + (layout.height - drawHeight) / 2;
+                    }
 
                     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
                     loadedPhotos++;
@@ -385,17 +429,13 @@
                 img.src = dataURL;
             });
 
-            // Fungsi untuk menggambar template
             function drawTemplateOnStrip() {
                 if (templateImage.complete && templateImage.naturalWidth > 0) {
+                    // Gambar template di atas semua foto
                     ctx.drawImage(templateImage, 0, 0, stripWidth, stripHeight);
                     resultContainer.style.display = 'flex';
                 } else {
-                    // Fallback jika gambar template gagal dimuat
-                    console.error('Template image not loaded or invalid. Drawing fallback border.');
-                    ctx.strokeStyle = selectedBorderColor;
-                    ctx.lineWidth = 10;
-                    ctx.strokeRect(0, 0, stripWidth, stripHeight);
+                    console.error('Template image not loaded or invalid. Showing plain photos.');
                     resultContainer.style.display = 'flex';
                 }
             }
@@ -406,7 +446,7 @@
             const dataURL = finalStripCanvas.toDataURL('image/png');
             const link = document.createElement('a');
             link.href = dataURL;
-            link.download = `Photobooth_Strip_${Date.now()}.png`; // Nama file unik
+            link.download = `Pixel_Photostrip_${Date.now()}.png`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
