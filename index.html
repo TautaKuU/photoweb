@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobooth Web dengan Template Kustom</title>
+    <style>
+        /* CSS untuk Styling */
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Contoh font lebih modern */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #1a1a1a;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1,
+        h2 {
+            color: #00ff88;
+            /* Warna hijau neon */
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+        }
+        /* --- Kontainer Kamera (Lanskap) --- */
+        
+        #camera-container {
+            width: 400px;
+            height: 300px;
+            border: 5px solid #00ff88;
+            /* Border hijau neon */
+            background-color: black;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+            margin-bottom: 20px;
+        }
+        
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            transform: scaleX(1);
+        }
+        /* --- Overlay Flash Layar Penuh --- */
+        
+        #flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            opacity: 0;
+            transition: opacity 0.1s;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        #timer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8em;
+            color: white;
+            text-shadow: 0 0 10px black;
+            display: none;
+            z-index: 5;
+        }
+        
+        button {
+            padding: 10px 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            background-color: #00ff88;
+            /* Warna hijau neon */
+            color: #1a1a1a;
+            /* Teks gelap */
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
+        }
+        
+        button:hover:not(:disabled) {
+            background-color: #00e077;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #444;
+            color: #bbb;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        /* --- Template Selector (Menyesuaikan dengan tampilan gambar) --- */
+        
+        #template-selector {
+            margin: 20px 0;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .template-option {
+            width: 250px;
+            /* Lebar thumbnail preview */
+            height: 70px;
+            /* Tinggi thumbnail preview */
+            border: 4px solid #444;
+            display: flex;
+            /* Flex untuk konten di dalam opsi */
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+            /* Penting untuk gambar preview */
+        }
+        
+        .template-option.selected {
+            border-color: #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+        }
+        
+        .template-option img.preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Pastikan gambar mengisi preview */
+            opacity: 0.7;
+            /* Sedikit transparan untuk visual */
+        }
+        
+        .template-option-label {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: white;
+        }
+        /* --- Hasil Foto Lanskap --- */
+        
+        #result-container {
+            margin-top: 30px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #final-strip {
+            width: 1600px;
+            height: 300px;
+            border: 10px solid #00ff88;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            border-radius: 10px;
+            background-color: #1f1f1f;
+            /* Warna fallback jika template gagal load */
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Photobooth Web Estetik</h1>
+
+    <div id="template-selector">
+        <h2>Pilih Desain Photostrip Anda</h2>
+        <div id="template-1" class="template-option selected" data-template-img="template_cosmic.png">
+            <img src="template_cosmic_preview.png" alt="Cosmic Vibes Preview" class="preview">
+            <span class="template-option-label">Cosmic Vibes</span>
+        </div>
+        <div id="template-2" class="template-option" data-template-img="template_floral.png">
+            <img src="template_floral_preview.png" alt="Floral Dream Preview" class="preview">
+            <span class="template-option-label">Floral Dream</span>
+        </div>
+        <div id="template-3" class="template-option" data-template-img="template_retro.png">
+            <img src="template_retro_preview.png" alt="Retro Party Preview" class="preview">
+            <span class="template-option-label">Retro Party</span>
+        </div>
+    </div>
+
+    <div id="camera-container">
+        <video id="video" autoplay></video>
+        <div id="timer"></div>
+        <p id="start-message" style="color: white; text-align: center; padding-top: 140px;">Klik **Aktifkan Kamera**.</p>
+    </div>
+
+    <div id="flash-overlay"></div>
+
+    <button id="cameraButton">Aktifkan Kamera</button>
+    <button id="startButton" disabled>Mulai Sesi Photobooth</button>
+
+    <div id="result-container">
+        <h2>Hasil Foto Strip Horizontal Anda</h2>
+        <canvas id="final-strip" width="1600" height="300"></canvas>
+        <button id="downloadButton">Unduh Foto Strip</button>
+    </div>
+
+    <canvas id="snapshot-canvas" class="hidden"></canvas>
+
+
+    <script>
+        // JavaScript untuk Fungsionalitas
+        const video = document.getElementById('video');
+        const cameraButton = document.getElementById('cameraButton');
+        const startButton = document.getElementById('startButton');
+        const timerDisplay = document.getElementById('timer');
+        const flashOverlay = document.getElementById('flash-overlay');
+        const startMessage = document.getElementById('start-message');
+        const resultContainer = document.getElementById('result-container');
+        const downloadButton = document.getElementById('downloadButton');
+        const snapshotCanvas = document.getElementById('snapshot-canvas');
+        const finalStripCanvas = document.getElementById('final-strip');
+        const templateOptions = document.querySelectorAll('.template-option');
+        const photos = [];
+
+        const PHOTO_COUNT = 4;
+        let selectedTemplateImgSrc = 'template_cosmic.png'; // Default template
+        let templateImage = new Image(); // Objek gambar untuk template
+
+        // 1. Logika Pemilihan Template
+        templateOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                templateOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedTemplateImgSrc = option.getAttribute('data-template-img');
+                // Pra-muat gambar template yang dipilih
+                templateImage.src = selectedTemplateImgSrc;
+                templateImage.onload = () => console.log('Template image loaded:', selectedTemplateImgSrc);
+                templateImage.onerror = () => console.error('Failed to load template image:', selectedTemplateImgSrc);
+            });
+        });
+
+        // Muat template default saat pertama kali dimuat
+        templateImage.src = selectedTemplateImgSrc;
+
+        // 2. Fungsi untuk mengaktifkan kamera
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'user',
+                        width: {
+                            ideal: 600
+                        },
+                        height: {
+                            ideal: 450
+                        }
+                    }
+                })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    startMessage.style.display = 'none';
+                    startButton.disabled = false;
+                    cameraButton.textContent = 'Mulai Sesi Ulang';
+                    photos.length = 0;
+                    resultContainer.style.display = 'none';
+                })
+                .catch(err => {
+                    alert('Akses kamera ditolak atau tidak ditemukan. Pastikan Anda mengizinkan akses kamera.');
+                    console.error(err);
+                    startButton.disabled = true;
+                });
+        }
+
+        // 3. Fungsi untuk mengambil 4 foto secara berurutan
+        function startPhotoboothSession() {
+            if (!video.srcObject) {
+                alert('Silakan aktifkan kamera terlebih dahulu.');
+                return;
+            }
+
+            startButton.disabled = true;
+            timerDisplay.style.display = 'block';
+            photos.length = 0;
+            let currentPhoto = 0;
+
+            function takePhotoLoop() {
+                if (currentPhoto < PHOTO_COUNT) {
+                    let countdown = 3;
+                    timerDisplay.textContent = countdown;
+
+                    const timerInterval = setInterval(() => {
+                        countdown--;
+                        if (countdown > 0) {
+                            timerDisplay.textContent = countdown;
+                        } else {
+                            clearInterval(timerInterval);
+                            timerDisplay.textContent = 'KLIK!';
+
+                            flashOverlay.style.opacity = 1;
+
+                            setTimeout(() => {
+                                captureSnapshot(currentPhoto);
+                                flashOverlay.style.opacity = 0;
+
+                                currentPhoto++;
+                                if (currentPhoto < PHOTO_COUNT) {
+                                    setTimeout(takePhotoLoop, 1000);
+                                } else {
+                                    timerDisplay.style.display = 'none';
+                                    drawFinalStrip();
+                                    startButton.disabled = false;
+                                }
+                            }, 500);
+                        }
+                    }, 1000);
+                }
+            }
+
+            takePhotoLoop();
+        }
+
+        // 4. Fungsi untuk mengambil satu frame dan menyimpannya
+        function captureSnapshot(index) {
+            const videoWidth = video.videoWidth || 600;
+            const videoHeight = video.videoHeight || 450;
+
+            snapshotCanvas.width = videoWidth;
+            snapshotCanvas.height = videoHeight;
+
+            const context = snapshotCanvas.getContext('2d');
+            context.drawImage(video, 0, 0, videoWidth, videoHeight);
+
+            photos[index] = snapshotCanvas.toDataURL('image/png');
+        }
+
+        // 5. Fungsi untuk menggambar hasil akhir strip foto (Horizontal)
+        function drawFinalStrip() {
+            const stripWidth = finalStripCanvas.width;
+            const stripHeight = finalStripCanvas.height;
+            const ctx = finalStripCanvas.getContext('2d');
+
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, stripWidth, stripHeight);
+
+            // 1. Gambar semua foto terlebih dahulu
+            const panelWidth = stripWidth / PHOTO_COUNT;
+            const padding = 10;
+            const photoHeight = stripHeight - (padding * 2); // Tinggi foto setelah padding
+
+            let loadedPhotos = 0;
+            photos.forEach((dataURL, index) => {
+                const img = new Image();
+                img.onload = () => {
+                    const imageRatio = img.width / img.height;
+                    const drawWidth = photoHeight * imageRatio; // Lebar foto disesuaikan
+                    const drawHeight = photoHeight;
+
+                    const offsetX = index * panelWidth + (panelWidth - drawWidth) / 2; // Posisi di tengah panel
+                    const offsetY = padding;
+
+                    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+                    loadedPhotos++;
+
+                    // Setelah semua foto dimuat, baru gambar template di atasnya
+                    if (loadedPhotos === PHOTO_COUNT) {
+                        drawTemplateOnStrip();
+                    }
+                };
+                img.src = dataURL;
+            });
+
+            // Fungsi untuk menggambar template
+            function drawTemplateOnStrip() {
+                if (templateImage.complete && templateImage.naturalWidth > 0) {
+                    ctx.drawImage(templateImage, 0, 0, stripWidth, stripHeight);
+                    resultContainer.style.display = 'flex';
+                } else {
+                    // Fallback jika gambar template gagal dimuat
+                    console.error('Template image not loaded or invalid. Drawing fallback border.');
+                    ctx.strokeStyle = selectedBorderColor;
+                    ctx.lineWidth = 10;
+                    ctx.strokeRect(0, 0, stripWidth, stripHeight);
+                    resultContainer.style.display = 'flex';
+                }
+            }
+        }
+
+        // 6. Fungsi untuk mengunduh strip foto
+        function downloadStrip() {
+            const dataURL = finalStripCanvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = `Photobooth_Strip_${Date.now()}.png`; // Nama file unik
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Event Listeners
+        cameraButton.addEventListener('click', startCamera);
+        startButton.addEventListener('click', startPhotoboothSession);
+        downloadButton.addEventListener('click', downloadStrip);
+    </script>
+</body>
+
+</html>
